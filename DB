@@ -1,0 +1,126 @@
+// dbdiagram.io syntax
+Table users {
+  id unsignedBigInteger [pk]
+  role_id unsignedBigInteger
+  name string
+  email string
+  password string
+  remember_token string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table roles {
+  id unsignedBigInteger [pk]
+  name string
+  guard_name string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table suppliers {
+  id unsignedBigInteger [pk]
+  name string
+  contact string
+  address text
+  phone string
+  email string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products {
+  id unsignedBigInteger [pk]
+  supplier_id unsignedBigInteger
+  name string
+  slug string [unique]
+  sku string [unique]
+  price decimal(10,2)
+  stock unsignedInteger
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sliders {
+  id unsignedBigInteger [pk]
+  title string
+  slug string [unique]
+  image string
+  link string
+  order unsignedInteger
+  status enum('active', 'inactive') [default: 'active']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table product_slider {
+  slider_id unsignedBigInteger
+  product_id unsignedBigInteger
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table purchases {
+  id unsignedBigInteger [pk]
+  supplier_id unsignedBigInteger
+  purchase_date date
+  total_amount decimal(10,2)
+  status string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table purchase_details {
+  id unsignedBigInteger [pk]
+  purchase_id unsignedBigInteger
+  product_id unsignedBigInteger
+  quantity unsignedInteger
+  purchase_price decimal(10,2)
+  subtotal decimal(10,2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sales {
+  id unsignedBigInteger [pk]
+  user_id unsignedBigInteger
+  sale_date date
+  total_amount decimal(10,2)
+  payment_method string
+  status string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sale_details {
+  id unsignedBigInteger [pk]
+  sale_id unsignedBigInteger
+  product_id unsignedBigInteger
+  quantity unsignedInteger
+  sale_price decimal(10,2)
+  subtotal decimal(10,2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Relasi
+Ref: users.role_id > roles.id
+Ref: products.supplier_id > suppliers.id
+Ref: purchases.supplier_id > suppliers.id
+Ref: purchase_details.purchase_id > purchases.id
+Ref: purchase_details.product_id > products.id
+Ref: sales.user_id > users.id
+Ref: sale_details.sale_id > sales.id
+Ref: sale_details.product_id > products.id
+Ref: product_slider.slider_id > sliders.id
+Ref: product_slider.product_id > products.id
+
+// suppliers (Tabel Supplier harus ada sebelum products dan purchases)
+// products (Membutuhkan foreign key ke suppliers)
+// sliders (Tabel Slider harus ada sebelum product_slider)
+// product_slider (Pivot table yang membutuhkan products dan sliders)
+// purchases (Membutuhkan foreign key ke suppliers)
+// purchase_details (Membutuhkan purchases dan products)
+// sales (Membutuhkan foreign key ke users)
+// sale_details (Membutuhkan sales dan products)
