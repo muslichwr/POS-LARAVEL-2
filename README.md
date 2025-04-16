@@ -1,1 +1,1 @@
-# POS-LARAVEL-2
+POS dengan Fitur Inventory Management
